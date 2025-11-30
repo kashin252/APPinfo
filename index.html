@@ -2,10 +2,552 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kashin Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --text-primary: #1d1d1f;
+      --text-secondary: #86868b;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f7;
+      --accent: #0071e3;
+      --accent-hover: #0077ed;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ナビゲーション */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-content {
+      max-width: 1024px;
+      width: 100%;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    /* ヒーローセクション */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      background: linear-gradient(180deg, #fbfbfd 0%, #ffffff 100%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      font-size: clamp(48px, 10vw, 80px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #1d1d1f 0%, #424245 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(18px, 3vw, 28px);
+      color: var(--text-secondary);
+      font-weight: 400;
+      max-width: 600px;
+      margin-bottom: 40px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      font-size: 17px;
+      font-weight: 500;
+      border-radius: 980px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: scale(1.02);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .btn-secondary:hover {
+      text-decoration: underline;
+    }
+
+    /* アプリセクション */
+    .apps-section {
+      padding: 120px 24px;
+      background: var(--bg-secondary);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 80px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      font-size: 19px;
+      color: var(--text-secondary);
+    }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .app-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .app-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    .app-card-image {
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-card:nth-child(1) .app-card-image {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .app-card:nth-child(2) .app-card-image {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .app-card:nth-child(3) .app-card-image {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .app-icon {
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .app-card-content {
+      padding: 28px;
+    }
+
+    .app-card-content h3 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .app-card-content p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .app-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.3s ease;
+    }
+
+    .app-link:hover {
+      gap: 10px;
+    }
+
+    /* 特徴セクション */
+    .features-section {
+      padding: 120px 24px;
+      background: var(--bg-primary);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 48px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature-item {
+      text-align: center;
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px;
+    }
+
+    .feature-item h3 {
+      font-size: 21px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-item p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* CTAセクション */
+    .cta-section {
+      padding: 120px 24px;
+      background: linear-gradient(135deg, #1d1d1f 0%, #2d2d30 100%);
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(32px, 6vw, 48px);
+      font-weight: 700;
+      color: white;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-section p {
+      font-size: 19px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 40px;
+    }
+
+    /* フッター */
+    footer {
+      padding: 48px 24px;
+      background: var(--bg-secondary);
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .copyright {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 100px 20px 60px;
+      }
+
+      .apps-section,
+      .features-section,
+      .cta-section {
+        padding: 80px 20px;
+      }
+
+      .btn {
+        padding: 14px 28px;
+        font-size: 15px;
+      }
+    }
+
+    /* アニメーション */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1,
+    .hero p,
+    .hero-buttons {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .hero p {
+      animation-delay: 0.1s;
+    }
+
+    .hero-buttons {
+      animation-delay: 0.2s;
+    }
+  </style>
 </head>
 <body>
-  <h1>Kashin Apps</h1>
-  <p>アプリ開発をしています。</p>
+  <!-- ナビゲーション -->
+  <nav>
+    <div class="nav-content">
+      <a href="#" class="logo">Kashin Apps</a>
+      <ul class="nav-links">
+        <li><a href="#apps">アプリ</a></li>
+        <li><a href="#features">特徴</a></li>
+        <li><a href="#contact">お問い合わせ</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ヒーローセクション -->
+  <section class="hero">
+    <span class="hero-badge">✨ 新アプリ公開中</span>
+    <h1>学びを、もっと<br>楽しく。</h1>
+    <p>統計学・資格試験の学習をサポートする<br>高品質なアプリを開発しています</p>
+    <div class="hero-buttons">
+      <a href="#apps" class="btn btn-primary">
+        アプリを見る
+        <span>→</span>
+      </a>
+      <a href="#contact" class="btn btn-secondary">
+        お問い合わせ
+      </a>
+    </div>
+  </section>
+
+  <!-- アプリセクション -->
+  <section class="apps-section" id="apps">
+    <div class="section-header">
+      <h2>つくったアプリ</h2>
+      <p>学習効率を最大化するために設計されたアプリケーション</p>
+    </div>
+    <div class="apps-grid">
+      <article class="app-card">
+        <div class="app-card-image">
+          <div class="app-icon">📊</div>
+        </div>
+        <div class="app-card-content">
+          <h3>統計検定 準1級</h3>
+          <p>フラッシュカード形式で効率よく学習。8カテゴリ・200問を収録し、確率・推定・検定をマスター。</p>
+          <a href="#" class="app-link">
+            詳しく見る
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+      <article class="app-card">
+        <div class="app-card-image">
+          <div class="app-icon">🏠</div>
+        </div>
+        <div class="app-card-content">
+          <h3>宅建士 暗記カード</h3>
+          <p>宅地建物取引士試験の重要ポイントを効率的に暗記。スキマ時間で合格を目指そう。</p>
+          <a href="#" class="app-link">
+            詳しく見る
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+      <article class="app-card">
+        <div class="app-card-image">
+          <div class="app-icon">💼</div>
+        </div>
+        <div class="app-card-content">
+          <h3>中小企業診断士</h3>
+          <p>中小企業診断士試験対策用のフラッシュカードアプリ。科目別に効率よく学習できます。</p>
+          <a href="#" class="app-link">
+            詳しく見る
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 特徴セクション -->
+  <section class="features-section" id="features">
+    <div class="section-header">
+      <h2>なぜ選ばれるのか</h2>
+      <p>ユーザー体験を第一に考えた設計</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <h3>シンプルで高速</h3>
+        <p>余計な機能を省き、学習に集中できる洗練されたインターフェース</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📱</div>
+        <h3>オフライン対応</h3>
+        <p>通信環境を気にせず、いつでもどこでも学習を継続</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎯</div>
+        <h3>効率的な反復学習</h3>
+        <p>科学的な学習理論に基づいた出題で記憶の定着をサポート</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTAセクション -->
+  <section class="cta-section" id="contact">
+    <h2>一緒に学びを変えよう</h2>
+    <p>ご質問・ご要望はお気軽にどうぞ</p>
+    <a href="mailto:contact@kashin2525.org" class="btn btn-primary">
+      メールで問い合わせる
+    </a>
+  </section>
+
+  <!-- フッター -->
+  <footer>
+    <div class="footer-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">利用規約</a>
+      <a href="#">特定商取引法に基づく表記</a>
+    </div>
+    <p class="copyright">© 2025 Kashin Apps. All rights reserved.</p>
+  </footer>
 </body>
 </html>
